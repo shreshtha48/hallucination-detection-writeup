@@ -6,26 +6,18 @@ Independent
 **For**  
 Lexsi Labs AI Alignment and Safety Hackathon
 
-**One-line claim:** Probes on a frozen 8B model's hidden states flag hallucinated entities while a Hindi or multi-turn answer is being generated, and holding back or removing what they flag cuts hallucinated entities: for Aya Expanse 8B in Hindi, 43.6% → 36.8% while it still states 80% of its entities, and 61.9% → 47.8% with the hallucination direction removed.
-
-**Base model + method in one line:** Aya Expanse 8B (and Llama 3.1 8B), frozen, with token-level probes on its hidden states for detection and probe-guided abstention, plus SafeTune removal of a hallucination direction at layer 15; no retraining.
-
 ## Tracks and problem statements
 
-Problem statements are numbered in the order they are listed for Track 2b on the hackathon's tracks page.
-
 - **Track 2b: AI Safety and Correction**
-  - **2b.9 Hallucination detection and abstention** (main): probes on internal activations flag likely hallucinations (Sections 3.2 and 4.2–4.3), and the model abstains on what they flag (Sections 3.8 and 4.5).
-  - **2b.5 Locating where safety lives:** the hallucination direction, the MLP neurons and the attention heads that write it, and a targeted fix that removes it (Sections 3.3 and 4.4).
-  - **2b.4 Inference-time safety steering:** activation steering and directional ablation with no retraining, aimed at hallucinated entities rather than harmful requests (Sections 3.3 and 4.4).
+  - **2b.9 Hallucination detection and abstention** (main): trained different probes using annotated web search and llm as a judge on the target model so that they flag hallucinations in the models internal space(Sections 3.2 and 4.2–4.3), and the model abstains on what they flag (Sections 3.8 and 4.5).
+  - **2b.5 Locating where safety lives:** identification and removal of the hallucination direction (Sections 3.3 and 4.4).
+  - **2b.4 Inference-time safety steering:** activation steering and directional ablation with no retraining, aimed at hallucinated entities  (Sections 3.3 and 4.4).
 
 ## Abstract
 
 This project introduces a real-time, low latency framework for detecting hallucination across hindi language and multi-turn long form LLM generated answers in real time and reducing it by removing a hallucination direction from the model's activations. We train token-level detectors on the hidden states of Llama 3.1 8B and Aya Expanse 8B that flag hallucinated entities (names, dates, numbers, citations) while the answer is being generated, and we use Lexsi Labs' SafeTune to find and remove the hallucination direction in the middle layers, with the datasets curated through CuratorKit. In Hindi, both models hallucinate more than an English control (40.2% and 43.6% of entities, against 32.3%), and in three-turn conversations Llama's hallucinated entities rise from 27% at the first turn to 64% at the third. Our best detectors reach a held-out span-max AUC of 0.73 in Hindi (Aya) and 0.84 in multi-turn conversations (Llama), against 0.68 and 0.61 for next-token entropy. Removing the direction from Aya lowers hallucinated entities in answers to new Hindi prompts from 61.9% to 47.8% (−14.2 points, 95% CI −22.7 to −3.9), with no refusals, a KL divergence of 0.02 nats per token and answers of nearly the same length. We release the Hindi and multi-turn datasets, the trained detectors, the hallucination directions and a live demo that shades every word by its probe score.
 
 ## Submission summary
-
-This write-up is our submission to the Lexsi Labs hackathon. The table below lists the links the submission asks for and the headline before-and-after numbers; Section 3.4 explains why we chose these metrics, Section 3.5 the datasets, tasks and models, Section 3.6 how the Lexsi Labs libraries fit into the pipeline, Section 4.5 the probe-guided abstention results, Section 4.6 what the result changes for a user, and Section 4.7 the cost comparison with a closed-source model.
 
 |                                  |                                                                                                      |
 | -------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -52,6 +44,10 @@ This write-up is our submission to the Lexsi Labs hackathon. The table below lis
 | **Multi-turn · Aya Expanse 8B**    | MLP probe, L18            | 0.685 → 0.812    | 0.24 → 0.42           | 0.69 → 0.77                 |
 | **Multi-turn · Llama 3.1 8B**      | Logistic regression, L13  | 0.612 → 0.836    | 0.22 → 0.52           | 0.60 → 0.77                 |
 | **English control · Llama 3.2 3B** | Logistic regression, L11  | 0.731 → 0.781    | 0.30 → 0.38           | 0.71 → 0.74                 |
+
+**central claim** Probes on a frozen 8B model's hidden states flag hallucinated entities while a Hindi or multi-turn answer is being generated, and holding back or removing what they flag cuts hallucinated entities: for Aya Expanse 8B in Hindi, 43.6% → 36.8% while it still states 80% of its entities, and 61.9% → 47.8% with the hallucination direction removed.
+
+**Base model:** Aya Expanse 8B (and Llama 3.1 8B), frozen, with token-level probes on its hidden states for detection and probe-guided abstention, plus SafeTune removal of a hallucination direction at layer 15; no retraining.
 
 ## 1. Introduction
 
@@ -525,7 +521,7 @@ Overall, we found more prevalence of hallucination in hindi language and we also
 
 **Repo layout and run instructions:** see the [repository README](https://github.com/shreshtha48/Hallucination-detection): `data/` builds the datasets (translation, generation, multi-turn conversations, annotation), `code/` trains and evaluates the probes and runs the steering, `results/` holds the metrics CSVs, figures and figure scripts, `docs/` is the GitHub Pages site and `demo/` the live demo. Run the notebooks in the order given in `data/readme.md` and `code/readme.md`; every notebook checkpoints to the Hub and resumes where it stopped.
 
-## Appendix (optional)
+## Appendix 
 
 Example of hindi language hallucination detection
 
