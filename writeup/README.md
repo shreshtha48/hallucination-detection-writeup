@@ -252,6 +252,18 @@ There is no closed-model quality baseline; closed models appear only in the cost
 | Steering test prompts | 20 new Hindi prompts, answered unmodified, with the direction ablated and steered | Hindi | 20 prompts × 3 conditions × 2 models |
 | Paper's English annotations ([obalcells/longfact-annotations](https://huggingface.co/datasets/obalcells/longfact-annotations), [augmented](https://huggingface.co/datasets/obalcells/longfact-augmented-annotations)) | Obeso et al. (2025) | English | 150 answers per source, added to multi-turn probe training only |
 
+### Hindi prompts
+- [shreshthamodi02/longfact-hindi](https://huggingface.co/datasets/shreshthamodi02/longfact-hindi)
+- [shreshthamodi02/longfact-hindi-paper](https://huggingface.co/datasets/shreshthamodi02/longfact-hindi-paper)
+
+### Hindi answers (before labelling)
+- [shreshthamodi02/longfact-hi-aya-expanse-8b-q8-0](https://huggingface.co/datasets/shreshthamodi02/longfact-hi-aya-expanse-8b-q8-0)
+- [shreshthamodi02/longfact-hi-llama3.1-8b-instruct-q8-0](https://huggingface.co/datasets/shreshthamodi02/longfact-hi-llama3.1-8b-instruct-q8-0)
+
+### Multi-turn conversations (before labelling)
+- [shreshthamodi02/longfact-multiturn-aya-expanse-8b-q8-0](https://huggingface.co/datasets/shreshthamodi02/longfact-multiturn-aya-expanse-8b-q8-0)
+- [shreshthamodi02/longfact-multiturn-llama3.1-8b-instruct-q8-0](https://huggingface.co/datasets/shreshthamodi02/longfact-multiturn-llama3.1-8b-instruct-q8-0)
+
 **Languages covered:** Hindi (the focus task) and English (the multi-turn runs and the control).
 
 **Train / test splits:** every detector is trained and evaluated with 2-fold cross-validation, split by prompt for the Hindi and control runs and by conversation for the multi-turn runs, so every answer is scored by a detector that never saw that prompt or conversation. Fold sizes for the Hindi runs are 29 / 28 answers (Aya) and 25 / 27 (Llama).
